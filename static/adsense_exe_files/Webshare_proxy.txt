@@ -1,0 +1,14 @@
+f.proxys5.net:6200:87015947-zone-custom-region-US:FOX2iK35
+f.proxys5.net:6200:87015947-zone-custom-region-GB:FOX2iK35
+f.proxys5.net:6200:87015947-zone-custom-region-CA:FOX2iK35
+f.proxys5.net:6200:87015947-zone-custom-region-AU:FOX2iK35
+f.proxys5.net:6200:87015947-zone-custom-region-JP:FOX2iK35
+f.proxys5.net:6200:87015947-zone-custom-region-NZ:FOX2iK35
+f.proxys5.net:6200:87015947-zone-custom-region-NO:FOX2iK35
+f.proxys5.net:6200:87015947-zone-custom-region-FR:FOX2iK35
+f.proxys5.net:6200:87015947-zone-custom-region-PT:FOX2iK35
+f.proxys5.net:6200:87015947-zone-custom-region-LU:FOX2iK35
+f.proxys5.net:6200:87015947-zone-custom-region-CH:FOX2iK35
+f.proxys5.net:6200:87015947-zone-custom-region-IT:FOX2iK35
+f.proxys5.net:6200:87015947-zone-custom-region-IE:FOX2iK35
+f.proxys5.net:6200:87015947-zone-custom-region-DE:FOX2iK35
