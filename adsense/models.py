@@ -13,8 +13,9 @@ class LiencenceUser(models.Model):
     key = models.CharField(max_length= 50 , unique=True,null=True,blank=True)
     host = models.CharField(max_length=100,unique=True, null=True , blank=True) 
     valid_end_date = models.DateTimeField()
-    def __str__(self) -> str:
-        return self.user
+    
+    def __str__(self): 
+        return f"{self.host}-{self.user}"
     
     def save(self, *args, **kwargs):
         if not self.key:  # Generate a key only if it doesn't exist already

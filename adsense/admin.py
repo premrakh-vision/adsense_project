@@ -5,6 +5,7 @@ from .models import LiencenceUser , Proxy
 class LiencenceUserAdmin(admin.ModelAdmin):
     search_fields = ['user', 'key'] 
     readonly_fields  = ('host',) 
+    list_display = ('host', 'user', 'key', 'valid_end_date')
     
     def has_change_permission(self, request, obj=None):
         if request.user.is_superuser:
