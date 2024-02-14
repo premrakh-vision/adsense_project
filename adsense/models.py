@@ -21,6 +21,7 @@ class LiencenceUser(models.Model):
         if not self.key:  # Generate a key only if it doesn't exist already
             self.key = uuid.uuid4()
             super(LiencenceUser, self).save(*args, **kwargs)
+            self.proxy.set(Proxy.objects.all())
         else:
             super(LiencenceUser, self).save(*args, **kwargs)
  
