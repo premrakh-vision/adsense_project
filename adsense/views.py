@@ -50,6 +50,23 @@ class ProxyView(viewsets.ViewSet):
             proxy_query_data = user.proxy.all()
             list_of_proxy = []
             for proxy in proxy_query_data:
+                list_of_proxy.append(proxy.proxy)
+            return Response(list_of_proxy,status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({'error':{str(e)}} , status=status.HTTP_404_NOT_FOUND)
+
+
+class ProxyTimezoneView(viewsets.ViewSet):
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    def list(self,request):
+        try:
+            host = request.query_params.get('host')
+            user = LiencenceUser.objects.get(host = host)
+            proxy_query_data = user.proxy.all()
+            list_of_proxy = []
+            for proxy in proxy_query_data:
                 list_of_proxy.append({
                     'proxy': proxy.proxy,
                     'timezone': proxy.timezone

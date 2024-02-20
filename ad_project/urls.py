@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path ,  include , re_path 
 from rest_framework.routers import DefaultRouter
-from adsense.views import LiencenceUserView , ProxyView
+from adsense.views import LiencenceUserView , ProxyView, ProxyTimezoneView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.static import serve 
@@ -25,6 +25,7 @@ router = DefaultRouter()
 
 router.register('user', LiencenceUserView , basename='user')
 router.register('proxy', ProxyView , basename='proxy')
+router.register('proxy_timezone', ProxyTimezoneView , basename='proxy_timezone')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
