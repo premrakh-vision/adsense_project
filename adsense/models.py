@@ -1,6 +1,6 @@
 from django.db import models
 import uuid
-import secrets
+import secrets, pytz
 import string
 from django.core.mail import send_mail
 from ad_project import settings
@@ -27,8 +27,16 @@ class LiencenceUser(models.Model):
  
  
 class Proxy(models.Model):
+
+    # Get the common timezones
+    common_timezones = pytz.common_timezones
+
+    # Transform the list of timezone strings into a list of tuples
+    TIMEZONE_CHOICES = [(tz, tz) for tz in common_timezones]
+
     user = models.ManyToManyField(LiencenceUser , related_name = 'proxy')
     proxy = models.CharField(max_length = 255,unique = True)
+    timezone = models.CharField(max_length = 500, choices=TIMEZONE_CHOICES, null=True)
 
     def __str__(self) -> str:
         return self.proxy

@@ -50,8 +50,10 @@ class ProxyView(viewsets.ViewSet):
             proxy_query_data = user.proxy.all()
             list_of_proxy = []
             for proxy in proxy_query_data:
-                list_of_proxy.append(proxy.proxy)
-            
+                list_of_proxy.append({
+                    'proxy': proxy.proxy,
+                    'timezone': proxy.timezone
+                    })
             return Response(list_of_proxy,status=status.HTTP_200_OK)
             
         except Exception as e:
