@@ -1,9 +1,10 @@
 from django.db import models
 import uuid
-import secrets, pytz
-import string
+import pytz
+import os
 from django.core.mail import send_mail
-from ad_project import settings
+from django.core.files.storage import FileSystemStorage
+
 # Create your models here.
 
 
@@ -41,3 +42,29 @@ class Proxy(models.Model):
 
     def __str__(self) -> str:
         return self.proxy
+
+
+class OverwriteStorage(FileSystemStorage):
+    def get_available_name(self, name, max_length=None):
+        if self.exists(name):
+            # If the file with the same name exists, remove it before saving the new one
+            os.remove(os.path.join(self.location, name))
+        return name
+
+class StaticFile(models.Model):
+    file_name = models.CharField(max_length=100, null=True, blank=True)
+    file = models.FileField(upload_to='static/adsense_exe_files/', storage=OverwriteStorage())
+
+    def save(self, *args, **kwargs):
+        if self.file_name:
+            extension = self.file.name.split('.')[-1]  # Get the file extension
+            new_file_name = f"{self.file_name}.{extension}"
+            self.file.name = new_file_name
+        super(StaticFile, self).save(*args, **kwargs)
+    
+    def __str__(self):
+        
+        if self.file_name:
+            return self.file_name
+        else:
+            return self.file.name
