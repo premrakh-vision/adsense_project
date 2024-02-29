@@ -13,6 +13,7 @@ class LiencenceUser(models.Model):
     key = models.CharField(max_length= 50 , unique=True,null=True,blank=True)
     host = models.CharField(max_length=100,unique=True, null=True , blank=True) 
     valid_end_date = models.DateTimeField()
+    is_static_proxy = models.BooleanField(default=False)
     
     def __str__(self): 
         return f"{self.host}-{self.user}"

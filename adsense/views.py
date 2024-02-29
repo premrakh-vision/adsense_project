@@ -75,3 +75,42 @@ class ProxyTimezoneView(viewsets.ViewSet):
             
         except Exception as e:
             return Response({'error':{str(e)}} , status=status.HTTP_404_NOT_FOUND)
+        
+        
+import pytz
+from django.http import JsonResponse
+from .models import Proxy, LiencenceUser
+
+from django.db import transaction
+
+def populate_proxies(request):
+    try:
+        with open('proxy.txt', 'r') as file:
+            proxies = [proxy.strip() for proxy in file]
+
+        common_timezones = pytz.common_timezones
+
+        # Create Proxy instances
+        proxy_instances = [Proxy(proxy=proxy) for proxy in proxies]
+
+        # Bulk create Proxy instances
+        Proxy.objects.bulk_create(proxy_instances)
+
+        # Retrieve all users once
+        users = list(LiencenceUser.objects.all())
+        a = 1
+        with transaction.atomic():
+            for proxy_instance in Proxy.objects.all():
+                proxy_instance.user.add(*users)
+                print(a)
+                a+=1
+
+    except Exception as e:
+        return JsonResponse({'message': 'Error occurred: {}'.format(str(e))}, status=500)
+
+    return JsonResponse({'message': 'Successfully added proxies and associated users'})
+    
+    # print('********')
+    # Proxy.objects.all().delete()
+
+    # return JsonResponse({'message': 'Successfully deleted proxies and associated users'})
