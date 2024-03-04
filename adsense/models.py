@@ -38,7 +38,7 @@ class Proxy(models.Model):
 
     user = models.ManyToManyField(LiencenceUser , related_name = 'proxy')
     proxy = models.CharField(max_length = 255,unique = True)
-    timezone = models.CharField(max_length = 500, choices=TIMEZONE_CHOICES, null=True)
+    timezone = models.CharField(max_length = 500, choices=TIMEZONE_CHOICES, default = 'US/Central')
 
     def __str__(self) -> str:
         return self.proxy
@@ -52,7 +52,7 @@ class OverwriteStorage(FileSystemStorage):
         return name
 
 class StaticFile(models.Model):
-    file_name = models.CharField(max_length=100, null=True, blank=True)
+    file_name = models.CharField(max_length=100,choices = (('static_proxy','static_proxy'),('user_agent','user_agent')) ,null=True, blank=True)
     file = models.FileField(upload_to='static/adsense_exe_files/', storage=OverwriteStorage())
 
     def save(self, *args, **kwargs):

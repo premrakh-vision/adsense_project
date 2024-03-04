@@ -114,3 +114,14 @@ def populate_proxies(request):
     # Proxy.objects.all().delete()
 
     # return JsonResponse({'message': 'Successfully deleted proxies and associated users'})
+ 
+common_timezones = pytz.common_timezones
+import random
+# Transform the list of timezone strings into a list of tuples
+TIMEZONE_CHOICES = [(tz, tz) for tz in common_timezones]
+def edit_timezone(request):
+    proxy_list = Proxy.objects.all()
+    for proxy in proxy_list:
+        proxy.timezone = 'US/Central'
+        proxy.save()
+    return JsonResponse({'message': 'Successfully added proxies and associated users'})
