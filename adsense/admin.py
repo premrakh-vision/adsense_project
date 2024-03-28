@@ -44,9 +44,21 @@ class ProxyModelAdmin(admin.ModelAdmin):
 class StaticFileAdmin(admin.ModelAdmin):
     form = StaticFileForm
 
+class UseragentForm(ActionForm):
+    is_active = forms.BooleanField(required=False,label = 'Active')
 
 class UseragentAdmin(admin.ModelAdmin):
     list_display = ('platform', 'is_active')
+    actions = ['change_useragent_activity']
+    action_form = UseragentForm
+
+    def change_useragent_activity(self, request, queryset):
+        if request.POST.get('is_active'):
+            queryset.update(is_active=True) 
+        else:
+            queryset.update(is_active=False) 
+
+    change_useragent_activity.short_description = "Change Useragent activity"
 
 admin.site.register(StaticFile, StaticFileAdmin)
 # Register the model with the custom admin class
