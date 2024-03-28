@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path ,  include , re_path 
 from rest_framework.routers import DefaultRouter
-from adsense.views import LiencenceUserView , ProxyView, ProxyTimezoneView , populate_proxies , edit_timezone
+from adsense.views import LiencenceUserView , ProxyView, ProxyTimezoneView , populate_proxies , edit_timezone , UserAgentView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.static import serve 
@@ -31,7 +31,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('licence/',include(router.urls)),
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
-    # path('populate-proxies/', populate_proxies, name='populate_proxies'),
+    path('populate-proxies/', populate_proxies, name='populate_proxies'),
     path('edit_timezone/', edit_timezone, name='edit_timezone'),
+    path('user_agent/', UserAgentView.as_view({'get': 'custom_action'}), name='custom_action'),
 ]
 

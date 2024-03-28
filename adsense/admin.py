@@ -1,6 +1,6 @@
 from .models import StaticFile
 from django.contrib import admin
-from .models import LiencenceUser , Proxy
+from .models import LiencenceUser , Proxy , UserAgent
 from django.contrib.admin.helpers import ActionForm
 from django import forms
 
@@ -44,7 +44,13 @@ class ProxyModelAdmin(admin.ModelAdmin):
 class StaticFileAdmin(admin.ModelAdmin):
     form = StaticFileForm
 
+
+class UseragentAdmin(admin.ModelAdmin):
+    list_display = ('platform', 'is_active')
+
 admin.site.register(StaticFile, StaticFileAdmin)
 # Register the model with the custom admin class
 admin.site.register(LiencenceUser, LiencenceUserAdmin)
 admin.site.register(Proxy,ProxyModelAdmin)
+
+admin.site.register(UserAgent,UseragentAdmin)

@@ -4,6 +4,7 @@ import pytz
 import os
 from django.core.mail import send_mail
 from django.core.files.storage import FileSystemStorage
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
@@ -68,3 +69,16 @@ class StaticFile(models.Model):
             return self.file_name
         else:
             return self.file.name
+
+       
+class UserAgent(models.Model):
+    platform = models.CharField(max_length = 500 , unique = True)
+    os_min_version = models.IntegerField(default = 10) 
+    os_max_version = models.IntegerField(default = 15)
+    browser_string = models.CharField(default = "Version/{version}.0 Mobile Safari/537.36")
+    device_list = ArrayField(models.CharField(), blank=True , default=list)
+    is_active = models.BooleanField(default = True)
+    
+    def __str__(self) -> str:
+        return self.platform
+    

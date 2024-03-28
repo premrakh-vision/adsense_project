@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import LiencenceUser , Proxy
-from .serializers import LiecenceUserSerializer 
+from .models import LiencenceUser , Proxy , UserAgent
+from .serializers import LiecenceUserSerializer , UserAgentSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 # Create your views here.
 
 class LiencenceUserView(viewsets.ViewSet):
@@ -75,20 +76,44 @@ class ProxyTimezoneView(viewsets.ViewSet):
             
         except Exception as e:
             return Response({'error':{str(e)}} , status=status.HTTP_404_NOT_FOUND)
+
+
+class UserAgentView(viewsets.ViewSet):
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    @action(detail=False, methods=['get'])
+    def custom_action(self,request):
+        user_agent_data = UserAgent.objects.filter(is_active=True)
+
+        browsers = dict(user_agent_data.values_list('platform' , 'browser_string'))
+        platforms = list(browsers.keys())
+        devices = dict(user_agent_data.values_list('platform' , 'device_list'))
+        os_versions = {}
         
+        for user_agent in user_agent_data:
+            platform = user_agent.platform
+            version_list  = [str(version) for version in range(user_agent.os_min_version , user_agent.os_max_version)]
+            os_versions[platform] = version_list
+
+        all_data = {
+            "platforms" : platforms,
+            "os_versions": os_versions,
+            "browsers": browsers,
+            "devices": devices,
+        }
         
+        print(all_data)
+        return Response(all_data,status=status.HTTP_200_OK)
+  
 import pytz
 from django.http import JsonResponse
-from .models import Proxy, LiencenceUser
-
 from django.db import transaction
 
 def populate_proxies(request):
     try:
         with open('proxy.txt', 'r') as file:
             proxies = [proxy.strip() for proxy in file]
-
-        common_timezones = pytz.common_timezones
 
         # Create Proxy instances
         proxy_instances = [Proxy(proxy=proxy) for proxy in proxies]
@@ -119,6 +144,7 @@ common_timezones = pytz.common_timezones
 import random
 # Transform the list of timezone strings into a list of tuples
 TIMEZONE_CHOICES = [(tz, tz) for tz in common_timezones]
+
 def edit_timezone(request):
     proxy_list = Proxy.objects.all()
     for proxy in proxy_list:

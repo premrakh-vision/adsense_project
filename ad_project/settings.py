@@ -139,6 +139,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS=['https://ads-license-api.optimumtechnologies.co']
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400 # 5 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 26214400 # 5 MB
+
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_PORT = 587
