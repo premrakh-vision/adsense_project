@@ -77,10 +77,12 @@ class UserAgent(models.Model):
     os_max_version = models.IntegerField(default = 15)
     browser_string = models.CharField(default = "Version/{version}.0 Mobile Safari/537.36")
     device_list = ArrayField(models.CharField(), blank=True , default=list)
+    browser_versions = ArrayField(models.CharField(), blank=True , default=list)
+    apple_webkit_versions = ArrayField(models.CharField(), blank=True , default=list)
     is_active = models.BooleanField(default = True)
     browser_versions = ArrayField(models.CharField(), blank=True , default=list)
     apple_webkit_versions = ArrayField(models.CharField(), blank=True , default=list)
     
     def __str__(self) -> str:
         return self.platform
-    
+        
