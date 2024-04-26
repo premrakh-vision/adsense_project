@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import LiencenceUser , Proxy , UserAgent
-from .serializers import LiecenceUserSerializer , UserAgentSerializer
+from .models import LiencenceUser , Proxy , UserAgent 
+from .serializers import LiecenceUserSerializer , AdsenseLogSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
+from .utils import device_resolutions
 # Create your views here.
 
 class LiencenceUserView(viewsets.ViewSet):
@@ -67,11 +69,13 @@ class ProxyTimezoneView(viewsets.ViewSet):
             user = LiencenceUser.objects.get(host = host)
             proxy_query_data = user.proxy.all()
             list_of_proxy = []
-            for proxy in proxy_query_data:
-                list_of_proxy.append({
-                    'proxy': proxy.proxy,
-                    'timezone': proxy.timezone
-                    })
+            for proxy_obj in proxy_query_data:
+                list_proxy = [item.strip() for item in proxy_obj.proxy.split('\n') if item.strip()]
+                for proxy in list_proxy:
+                    list_of_proxy.append({
+                        'proxy': proxy,
+                        'timezone': proxy_obj.timezone
+                        })
             return Response(list_of_proxy,status=status.HTTP_200_OK)
             
         except Exception as e:
@@ -89,8 +93,10 @@ class UserAgentView(viewsets.ViewSet):
         browsers = dict(user_agent_data.values_list('platform' , 'browser_string'))
         platforms = list(browsers.keys())
         devices = dict(user_agent_data.values_list('platform' , 'device_list'))
+        browser_versions = dict(user_agent_data.values_list('platform' , 'browser_versions'))
+        apple_webkit_versions = dict(user_agent_data.values_list('platform' , 'apple_webkit_versions'))
         os_versions = {}
-        
+
         for user_agent in user_agent_data:
             platform = user_agent.platform
             version_list  = [str(version) for version in range(user_agent.os_min_version , user_agent.os_max_version)]
@@ -101,11 +107,28 @@ class UserAgentView(viewsets.ViewSet):
             "os_versions": os_versions,
             "browsers": browsers,
             "devices": devices,
+            "browser_versions": browser_versions,
+            "apple_webkit_versions": apple_webkit_versions,
+            "device_resolutions": device_resolutions
         }
         
         print(all_data)
         return Response(all_data,status=status.HTTP_200_OK)
   
+class AdsenseLogView(viewsets.ViewSet):
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    def create(self,request):
+        try:
+            data = request.data
+            serialize_data = AdsenseLogSerializer(data=data)
+            if serialize_data.is_valid(raise_exception=True):
+                serialize_data.save()
+                return Response({"Success" : True} , status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"Success" : False} , status=status.HTTP_400_BAD_REQUEST)
+
+
 import pytz
 from django.http import JsonResponse
 from django.db import transaction

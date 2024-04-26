@@ -1,4 +1,4 @@
-from .models import LiencenceUser , UserAgent
+from .models import LiencenceUser , UserAgent , AdsenseLog
 from rest_framework import serializers
 
 
@@ -11,3 +11,10 @@ class UserAgentSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAgent
         exclude  = ['is_active']
+        
+        
+class AdsenseLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdsenseLog
+        fields = ["user","website", "ip" , "host" ,"key"]
+        
