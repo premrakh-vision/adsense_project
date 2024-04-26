@@ -106,7 +106,6 @@ class UserAgent(models.Model):
     def __str__(self) -> str:
         return self.platform
 
-
 class AdsenseLog(models.Model):
     user = models.CharField(max_length=50)
     website = models.CharField()

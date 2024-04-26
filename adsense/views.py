@@ -83,8 +83,8 @@ class ProxyTimezoneView(viewsets.ViewSet):
 
 
 class UserAgentView(viewsets.ViewSet):
-    authentication_classes = [BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [BasicAuthentication]
+    # permission_classes = [IsAuthenticated]
     
     @action(detail=False, methods=['get'])
     def custom_action(self,request):
@@ -95,7 +95,10 @@ class UserAgentView(viewsets.ViewSet):
         devices = dict(user_agent_data.values_list('platform' , 'device_list'))
         browser_versions = dict(user_agent_data.values_list('platform' , 'browser_versions'))
         apple_webkit_versions = dict(user_agent_data.values_list('platform' , 'apple_webkit_versions'))
+        browser_versions = dict(user_agent_data.values_list('platform' , 'browser_versions'))
+        apple_webkit_versions = dict(user_agent_data.values_list('platform' , 'apple_webkit_versions'))
         os_versions = {}
+
 
         for user_agent in user_agent_data:
             platform = user_agent.platform
